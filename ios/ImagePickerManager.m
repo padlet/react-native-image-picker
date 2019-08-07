@@ -80,7 +80,8 @@ RCT_EXPORT_METHOD(showImagePicker:(NSDictionary *)options callback:(RCTResponseS
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+        // UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+        UIViewController *root = [self visibleViewController:nil];
         while (root.presentedViewController != nil) {
             root = root.presentedViewController;
         }
@@ -705,5 +706,37 @@ RCT_EXPORT_METHOD(showImagePicker:(NSDictionary *)options callback:(RCTResponseS
     });
     return ISO8601DateFormatter;
 }
+
+#pragma mark - Fixes for Wix V2 Navigation
+
+- (UIViewController *)visibleViewController:(UIViewController *)rootViewController
+{
+  if (!rootViewController)
+    rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+  
+  if (rootViewController.presentedViewController == nil)
+  {
+    return rootViewController;
+  }
+  if ([rootViewController.presentedViewController isKindOfClass:[UINavigationController class]])
+  {
+    UINavigationController *navigationController = (UINavigationController *)rootViewController.presentedViewController;
+    UIViewController *lastViewController = [[navigationController viewControllers] lastObject];
+    
+    return [self visibleViewController:lastViewController];
+  }
+  if ([rootViewController.presentedViewController isKindOfClass:[UITabBarController class]])
+  {
+    UITabBarController *tabBarController = (UITabBarController *)rootViewController.presentedViewController;
+    UIViewController *selectedViewController = tabBarController.selectedViewController;
+    
+    return [self visibleViewController:selectedViewController];
+  }
+  
+  UIViewController *presentedViewController = (UIViewController *)rootViewController.presentedViewController;
+  
+  return [self visibleViewController:presentedViewController];
+}
+
 
 @end
