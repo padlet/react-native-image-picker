@@ -190,7 +190,8 @@ RCT_EXPORT_METHOD(showImagePicker:(NSDictionary *)options callback:(RCTResponseS
     // Check permissions
     void (^showPickerViewController)() = ^void() {
         dispatch_async(dispatch_get_main_queue(), ^{
-            UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+            // UIViewController *root = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+            UIViewController *root = [self visibleViewController:nil];
             while (root.presentedViewController != nil) {
                 root = root.presentedViewController;
             }
