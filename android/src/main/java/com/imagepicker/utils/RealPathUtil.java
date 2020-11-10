@@ -166,6 +166,9 @@ public class RealPathUtil {
 	 */
 	public static String getDataColumn(Context context, Uri uri, String selection,
 	                                   String[] selectionArgs) {
+        if (uri == null) {
+			return null;
+		}
 
 		Cursor cursor = null;
 		final String column = "_data";
