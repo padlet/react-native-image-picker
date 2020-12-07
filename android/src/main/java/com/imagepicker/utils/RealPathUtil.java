@@ -165,7 +165,10 @@ public class RealPathUtil {
 	 * @return The value of the _data column, which is typically a file path.
 	 */
 	public static String getDataColumn(Context context, Uri uri, String selection,
-	                                   String[] selectionArgs) {
+									   String[] selectionArgs) {
+		if (uri == null) {
+			return null;
+		}
 
 		Cursor cursor = null;
 		final String column = "_data";
@@ -228,7 +231,7 @@ public class RealPathUtil {
 	 * @return Whether the Uri authority is FileProvider
 	 */
 	public static boolean isFileProviderUri(@NonNull final Context context,
-	                                        @NonNull final Uri uri) {
+											@NonNull final Uri uri) {
 		final String packageName = context.getPackageName();
 		final String authority = new StringBuilder(packageName).append(".provider").toString();
 		return authority.equals(uri.getAuthority());
@@ -240,7 +243,7 @@ public class RealPathUtil {
 	 * @return File path or null if file is missing
 	 */
 	public static @Nullable String getFileProviderPath(@NonNull final Context context,
-	                                                   @NonNull final Uri uri)
+													   @NonNull final Uri uri)
 	{
 		final File appDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 		final File file = new File(appDir, uri.getLastPathSegment());
